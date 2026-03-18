@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <libxml/parser.h>
 #include "logging/Logger.hpp"
 #include "xml/XMLTag.hpp"
 
@@ -31,6 +32,8 @@ public:
     AttributePair                      m_aAttributes;
     std::vector<std::shared_ptr<CTag>> m_aSubTags;
   };
+
+  xmlParserCtxtPtr _ctxt = nullptr;
 
   using CTagPtrVec = std::vector<std::shared_ptr<CTag>>;
 

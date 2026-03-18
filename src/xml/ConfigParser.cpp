@@ -9,6 +9,7 @@
 #include <string>
 #include <unordered_set>
 #include <utility>
+#include <iostream>
 
 #include "logging/LogMacros.hpp"
 #include "logging/Logger.hpp"
@@ -66,6 +67,9 @@ void OnStartElementNs(
   }
 
   auto pParser = static_cast<ConfigParser *>(ctx);
+
+  std::cout << "TAG: " << localname << " " << (URI ? reinterpret_cast<const char *>(URI) : "null") << " at line " << pParser->_ctxt->input->line << std::endl;
+
 
   std::string_view sPrefix(prefix == nullptr ? "" : reinterpret_cast<const char *>(prefix));
 
@@ -188,11 +192,11 @@ int ConfigParser::readXmlFile(std::string const &filePath)
 
   _hash = utils::preciceHash(content);
 
-  xmlParserCtxtPtr ctxt = xmlCreatePushParserCtxt(&SAXHandler, static_cast<void *>(this),
-                                                  content.c_str(), content.size(), nullptr);
+  _ctxt = xmlCreatePushParserCtxt(&SAXHandler, static_cast<void *>(this),
+                                content.c_str(), content.size(), nullptr);
 
-  xmlParseChunk(ctxt, nullptr, 0, 1);
-  xmlFreeParserCtxt(ctxt);
+  xmlParseChunk(_ctxt, nullptr, 0, 1);
+  xmlFreeParserCtxt(_ctxt);
   xmlCleanupParser();
 
   return 0;
