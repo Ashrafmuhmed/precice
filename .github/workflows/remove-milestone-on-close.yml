@@ -1,0 +1,23 @@
+name: Remove Milestone on Close
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  remove-milestone:
+    name: Remove milestone if PR closed unmerged
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == false
+    steps:
+      - name: Remove milestone
+        run: |
+          gh api \
+            --method PATCH \
+            "repos/${{ github.repository }}" \
+            -f milestone=
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
