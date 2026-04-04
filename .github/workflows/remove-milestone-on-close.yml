@@ -6,6 +6,7 @@ on:
 
 permissions:
   pull-requests: write
+  issues: write 
 
 jobs:
   remove-milestone:
@@ -17,7 +18,7 @@ jobs:
         run: |
           gh api \
             --method PATCH \
-            "repos/${{ github.repository }}" \
-            -f milestone=
+            "repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}" \
+            -F milestone=null
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
