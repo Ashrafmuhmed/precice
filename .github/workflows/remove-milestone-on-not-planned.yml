@@ -1,0 +1,24 @@
+name: Remove Milestone on Issue Closed as Not Planned
+
+on:
+  issues:
+    types: [closed]
+
+permissions:
+  issues: write
+
+jobs:
+  remove-milestone:
+    name: Remove milestone if issue closed as not planned
+    runs-on: ubuntu-latest
+    if: github.event.issue.state_reason == 'not_planned'
+
+    steps:
+      - name: Remove milestone
+        run: |
+          gh api \
+            --method PATCH \
+            "repos/${{ github.repository }}/issues/${{ github.event.issue.number }}" \
+            -F milestone=null
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
