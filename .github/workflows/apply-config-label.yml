@@ -29,6 +29,6 @@ jobs:
               - '.github/dependabot.yml'
       - name: Apply configuration label
         if: steps.changed.outputs.config == 'true'
-        run: gh pr edit ${{ github.event.pull_request.number }} --add-label configuration
+        run: gh pr edit ${{ github.event.pull_request.number }} --add-label configuration --repo ${{ github.repository }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
