@@ -1,0 +1,34 @@
+name: Apply Configuration Label
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  label-config:
+    name: Apply configuration label
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for config changes
+        id: changed
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            config:
+              - 'cmake/**'
+              - 'CMakeLists.txt'
+              - 'CMakePresets.json'
+              - '**/*.cmake'
+              - 'Doxyfile'
+              - '.pre-commit-config.yaml'
+              - 'src/precice/config/**'
+              - 'src/xml/**'
+              - '.github/dependabot.yml'
+      - name: Apply configuration label
+        if: steps.changed.outputs.config == 'true'
+        run: gh pr edit ${{ github.event.pull_request.number }} --add-label configuration
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
