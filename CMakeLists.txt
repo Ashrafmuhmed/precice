@@ -943,3 +943,4 @@ add_custom_target(
   WORKING_DIRECTORY ${preCICE_SOURCE_DIR}
   USES_TERMINAL
   )
+# test
